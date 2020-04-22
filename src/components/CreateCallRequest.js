@@ -1,0 +1,19 @@
+import React from 'react';
+import { connect } from 'react-redux';
+
+const CreateCallRequest = () => {
+    return (
+        <div>
+            <h1>Create call request</h1>
+        </div>
+    );
+};
+
+const mapStateToProps = (state) => {
+    return {};
+};
+
+export default connect(
+    mapStateToProps,
+    {} //connect actions creators to the component
+)(CreateCallRequest);
