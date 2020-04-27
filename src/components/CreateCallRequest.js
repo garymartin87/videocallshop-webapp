@@ -1,10 +1,59 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { useForm } from 'react-hook-form';
 
-const CreateCallRequest = () => {
+import { createCallRequest } from '../actions/callRequestActions';
+
+const CreateCallRequest = ({ createCallRequest }) => {
+    const { register, handleSubmit, errors } = useForm();
+    const onSubmit = (data) => {
+        const { email, name, lastName } = data;
+        createCallRequest(email, name, lastName);
+    };
+
     return (
-        <div>
-            <h1>Create call request</h1>
+        <div className="row">
+            <div className="col-lg-4 offset-lg-4 col-md-6 offset-md-3 col-xs-12">
+                <form
+                    id="create-call-request-form"
+                    onSubmit={handleSubmit(onSubmit)}
+                >
+                    <div className="form-group">
+                        <label>Email</label>
+                        <input
+                            type="email"
+                            className="form-control"
+                            name="email"
+                            ref={register({ required: true })}
+                        />
+                        {errors.email && <span>This field is required</span>}
+                    </div>
+                    <div className="form-group">
+                        <label>Nombre</label>
+                        <input
+                            name="name"
+                            type="text"
+                            className="form-control"
+                            ref={register({ required: true })}
+                        />
+                        {errors.name && <span>This field is required</span>}
+                    </div>
+                    <div className="form-group">
+                        <label>Apellido</label>
+                        <input
+                            name="lastName"
+                            type="text"
+                            className="form-control"
+                            ref={register({ required: true })}
+                        />
+                        {errors.lastName && <span>This field is required</span>}
+                    </div>
+
+                    <button type="submit" className="btn btn-primary">
+                        Ingresar a sala de espera
+                    </button>
+                </form>
+            </div>
         </div>
     );
 };
@@ -15,5 +64,5 @@ const mapStateToProps = (state) => {
 
 export default connect(
     mapStateToProps,
-    {} //connect actions creators to the component
+    { createCallRequest } //connect actions creators to the component
 )(CreateCallRequest);
