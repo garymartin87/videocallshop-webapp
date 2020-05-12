@@ -1,7 +1,29 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import socketIOClient from 'socket.io-client';
+
 import { connect } from 'react-redux';
 
-const WaitingRoom = () => {
+const WaitingRoom = ({ callRequest }) => {
+    useEffect(() => {
+        // ToDo: Move this to /api/callRequestSocket.js
+        const socket = socketIOClient(`${process.env.REACT_APP_API_BASE_URL}`, {
+            path: '/waiting-room-socket/?storeId=1',
+            extraHeaders: {
+                Authorization: `Bearer ${callRequest.callRequest.token}`,
+            },
+            transportOptions: {
+                polling: {
+                    extraHeaders: {
+                        Authorization: `Bearer ${callRequest.callRequest.token}`,
+                    },
+                },
+            },
+        });
+        socket.on('FromAPI', (data) => {
+            console.log(data);
+        });
+    }, [callRequest]);
+
     return (
         <div>
             <h1>WaitingRoom</h1>
@@ -10,10 +32,12 @@ const WaitingRoom = () => {
 };
 
 const mapStateToProps = (state) => {
-    return {};
+    return {
+        callRequest: state.callRequest,
+    };
 };
 
 export default connect(
     mapStateToProps,
-    {} //connect actions creators to the componen t
+    {} //connect actions creators to the component
 )(WaitingRoom);
