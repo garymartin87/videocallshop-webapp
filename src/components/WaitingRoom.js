@@ -13,7 +13,7 @@ const WaitingRoom = ({ cancelCallRequest, callRequest }) => {
         // ToDo: Move this to /api/callRequestSocket.js
         console.log('::: CONNECTING SOCKET');
         const socket = socketIOClient(
-            `${process.env.REACT_APP_API_BASE_URL}?storeId=1`,
+            `${process.env.REACT_APP_API_BASE_URL}?storeId=${callRequest.callRequest.storeId}`,
             {
                 path: '/waiting-room-socket',
                 cookie: false,
