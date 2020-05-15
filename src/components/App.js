@@ -9,6 +9,7 @@ import PrivateRoute from './PrivateRoute';
 import CreateCallRequest from './CreateCallRequest';
 import Call from './Call';
 import WaitingRoom from './WaitingRoom';
+import Thanks from './Thanks';
 
 import 'react-redux-toastr/lib/css/react-redux-toastr.min.css';
 
@@ -18,10 +19,11 @@ function App() {
             <Router history={history}>
                 <Switch>
                     <Route
-                        path="/create-call-request"
+                        path="/:storeId/create-call-request"
                         exact
                         component={CreateCallRequest}
                     />
+                    <Route path="/thanks" exact component={Thanks} />
                     <PrivateRoute
                         path="/waiting-room"
                         exact
@@ -29,7 +31,7 @@ function App() {
                     />
                     <PrivateRoute path="/call" exact component={Call} />
                     {/* default state when not match found */}
-                    <Redirect to="/create-call-request" />
+                    <Redirect to="/thanks" />
                 </Switch>
             </Router>
             <ReduxToastr

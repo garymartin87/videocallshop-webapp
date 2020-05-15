@@ -3,12 +3,15 @@ import socketIOClient from 'socket.io-client';
 
 import { connect } from 'react-redux';
 
-const WaitingRoom = ({ callRequest }) => {
+import { cancelCallRequest } from '../actions/callRequestActions';
+
+const WaitingRoom = ({ cancelCallRequest, callRequest }) => {
     const [socketConnected, setSocketConnected] = useState(false);
     const [queue, setQueue] = useState([]);
 
     useEffect(() => {
         // ToDo: Move this to /api/callRequestSocket.js
+        console.log('::: CONNECTING SOCKET');
         const socket = socketIOClient(
             `${process.env.REACT_APP_API_BASE_URL}?storeId=1`,
             {
@@ -26,14 +29,14 @@ const WaitingRoom = ({ callRequest }) => {
             }
         );
 
-        socket.on('disconnect', () => {
-            console.log('::: SOCKET CONNECTED');
-            setSocketConnected(false);
-        });
-
         socket.on('connect', () => {
             console.log('::: SOCKET CONNECTED');
             setSocketConnected(true);
+
+            socket.on('disconnect', () => {
+                console.log('::: SOCKET DISCONNECTED');
+                setSocketConnected(false);
+            });
         });
 
         socket.on('WAITING_ROOM_SENDED', function (waitingRoom) {
@@ -47,7 +50,17 @@ const WaitingRoom = ({ callRequest }) => {
         });
     }, []);
 
-    console.log('::: queue', queue, callRequest.callRequest.callRequestId);
+    console.log(
+        '::: queue',
+        queue,
+        callRequest.callRequest.callRequestId,
+        socketConnected
+    );
+
+    const submitCancelCallRequest = () => {
+        const { storeId, callRequestId } = callRequest.callRequest;
+        cancelCallRequest(storeId, callRequestId);
+    };
 
     return (
         <div>
@@ -72,6 +85,9 @@ const WaitingRoom = ({ callRequest }) => {
                     callRequest.callRequest.callRequestId.toString()
                 ) + 1}
             </div>
+            <div>
+                <button onClick={submitCancelCallRequest}>Cancelar</button>
+            </div>
         </div>
     );
 };
@@ -84,5 +100,5 @@ const mapStateToProps = (state) => {
 
 export default connect(
     mapStateToProps,
-    {} //connect actions creators to the component
+    { cancelCallRequest } //connect actions creators to the component
 )(WaitingRoom);

@@ -4,11 +4,12 @@ import { useForm } from 'react-hook-form';
 
 import { createCallRequest } from '../actions/callRequestActions';
 
-const CreateCallRequest = ({ createCallRequest }) => {
+const CreateCallRequest = ({ createCallRequest, match }) => {
     const { register, handleSubmit, errors } = useForm();
     const onSubmit = (data) => {
         const { email, name, lastName } = data;
-        createCallRequest(email, name, lastName);
+        const storeId = match.params.storeId;
+        createCallRequest(storeId, email, name, lastName);
     };
 
     return (
