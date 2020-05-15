@@ -16,6 +16,7 @@ const WaitingRoom = ({ cancelCallRequest, callRequest }) => {
             `${process.env.REACT_APP_API_BASE_URL}?storeId=1`,
             {
                 path: '/waiting-room-socket',
+                cookie: false,
                 extraHeaders: {
                     Authorization: `Bearer ${callRequest.callRequest.token}`,
                 },
