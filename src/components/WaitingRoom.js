@@ -33,17 +33,13 @@ const WaitingRoom = ({
     */
 
     const submitCancelCallRequest = () => {
-        const { storeId, callRequestId } = callRequest.callRequest;
+        const { storeId, callRequestId } = callRequest;
         cancelCallRequest(storeId, callRequestId);
     };
 
     const getPosition = () => {
-        if (callRequest.callRequest && callRequest.callRequest.callRequestId) {
-            return (
-                queue.indexOf(
-                    callRequest.callRequest.callRequestId.toString()
-                ) + 1
-            );
+        if (callRequest && callRequest.callRequestId) {
+            return queue.indexOf(callRequest.callRequestId.toString()) + 1;
         } else {
             return 0;
         }
@@ -58,17 +54,17 @@ const WaitingRoom = ({
         // ToDo: Move this to /api/callRequestSocket.js
         console.log('::: WaitingRoom CONNECTING SOCKET');
         const socket = socketIOClient(
-            `${process.env.REACT_APP_API_BASE_URL}?storeId=${callRequest.callRequest.storeId}`,
+            `${process.env.REACT_APP_API_BASE_URL}?storeId=${callRequest.storeId}`,
             {
                 path: '/waiting-room-socket',
                 cookie: false,
                 extraHeaders: {
-                    Authorization: `Bearer ${callRequest.callRequest.token}`,
+                    Authorization: `Bearer ${callRequest.token}`,
                 },
                 transportOptions: {
                     polling: {
                         extraHeaders: {
-                            Authorization: `Bearer ${callRequest.callRequest.token}`,
+                            Authorization: `Bearer ${callRequest.token}`,
                         },
                     },
                 },
@@ -109,30 +105,27 @@ const WaitingRoom = ({
 
     // Check no callRequest EFFECT
     useEffect(() => {
-        if (!callRequest.callRequest) {
+        if (!callRequest) {
             history.push('/home');
         }
     }, [callRequest]);
 
     // Check State EFFECT
     useEffect(() => {
-        console.log(
-            '::: WaitingRoom CHECK STATE EFFECT',
-            callRequest.callRequest.state
-        );
+        console.log('::: WaitingRoom CHECK STATE EFFECT', callRequest.state);
 
-        if (callRequest.callRequest.state === 'CALLED') {
+        if (callRequest.state === 'CALLED') {
             toastr.info('Info', 'Ha sido llamado, aguarde un instante.');
-            fetchCallByCallRequest(callRequest.callRequest);
+            fetchCallByCallRequest(callRequest);
             history.push('/call');
         }
 
-        if (callRequest.callRequest.state === 'CANCELLED') {
+        if (callRequest.state === 'CANCELLED') {
             cancelCallRequestSuccess();
             toastr.info('Info', 'Su llamada ha sido cancelada.');
         }
 
-        if (callRequest.callRequest.state === 'PROCESSING_CALL') {
+        if (callRequest.state === 'PROCESSING_CALL') {
             toastr.info('Info', 'Su llamada está siendo procesada.');
             console.log('::: WaitingRoom PROCESSING CALL');
         }
@@ -144,16 +137,16 @@ const WaitingRoom = ({
 
             <div style={{ textAlign: 'center' }}>
                 <h1 style={{ textAlign: 'center' }}>
-                    TIENDA ID: {callRequest.callRequest.storeId}
+                    TIENDA ID: {callRequest.storeId}
                 </h1>
                 <h3>{socketConnected ? 'CONNECTED' : 'DISCONNECTED'}</h3>
             </div>
             <hr />
             <h4>MY callRequestId</h4>
-            <p>{callRequest.callRequest.callRequestId}</p>
+            <p>{callRequest.callRequestId}</p>
 
             <h4>Token</h4>
-            <p>{callRequest.callRequest.token}</p>
+            <p>{callRequest.token}</p>
 
             <h4>POSITION</h4>
             <div>{getPosition()}</div>
@@ -166,7 +159,7 @@ const WaitingRoom = ({
 
 const mapStateToProps = (state) => {
     return {
-        callRequest: state.callRequest,
+        callRequest: state.callRequest.callRequest,
     };
 };
 
