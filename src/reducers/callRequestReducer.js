@@ -5,6 +5,9 @@ import {
     CALL_REQUEST_CANCEL_REQUESTED,
     CALL_REQUEST_CANCEL_SUCCESS,
     CALL_REQUEST_CANCEL_FAILED,
+    CALL_REQUEST_REFRESH_STATE_REQUESTED,
+    CALL_REQUEST_REFRESH_STATE_SUCCESS,
+    CALL_REQUEST_REFRESH_STATE_FAILED,
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -16,7 +19,9 @@ const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
+        // Creation
         case CALL_REQUEST_CREATION_REQUESTED:
+        case CALL_REQUEST_REFRESH_STATE_REQUESTED:
             return {
                 ...state,
                 isFetching: true,
@@ -27,11 +32,22 @@ export default (state = INITIAL_STATE, action) => {
                 callRequest: action.payload,
                 isFetching: false,
             };
+        case CALL_REQUEST_REFRESH_STATE_SUCCESS:
+            console.log(
+                'callRequestReducer CALL_REQUEST_REFRESH_STATE_SUCCESS'
+            );
+            return {
+                ...state,
+                callRequest: { state: action.payload },
+                isFetching: false,
+            };
         case CALL_REQUEST_CREATION_FAILED:
+        case CALL_REQUEST_REFRESH_STATE_FAILED:
             return {
                 ...state,
                 isFetching: false,
             };
+        // Cancel
         case CALL_REQUEST_CANCEL_REQUESTED:
             return {
                 ...state,

@@ -1,16 +1,23 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useForm } from 'react-hook-form';
 
 import { createCallRequest } from '../actions/callRequestActions';
+import history from '../history';
 
-const CreateCallRequest = ({ createCallRequest, match }) => {
+const CreateCallRequest = ({ createCallRequest, callRequest, match }) => {
     const { register, handleSubmit, errors } = useForm();
     const onSubmit = (data) => {
         const { email, name, lastName } = data;
         const storeId = match.params.storeId;
         createCallRequest(storeId, email, name, lastName);
     };
+
+    useEffect(() => {
+        if (callRequest.callRequest) {
+            history.push('/waiting-room');
+        }
+    }, [callRequest.callRequest]);
 
     return (
         <div className="row">
@@ -60,7 +67,9 @@ const CreateCallRequest = ({ createCallRequest, match }) => {
 };
 
 const mapStateToProps = (state) => {
-    return {};
+    return {
+        callRequest: state.callRequest,
+    };
 };
 
 export default connect(

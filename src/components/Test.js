@@ -1,10 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-const Thanks = () => {
+const Test = ({ apiKey, token, sessionId }) => {
     return (
         <div>
-            <h1>Thanks</h1>
+            <h1>Test</h1>
+            <p>{apiKey}</p>
+            <p>{token}</p>
+            <p>{sessionId}</p>
         </div>
     );
 };
@@ -16,4 +19,4 @@ const mapStateToProps = (state) => {
 export default connect(
     mapStateToProps,
     {} //connect actions creators to the componen t
-)(Thanks);
+)(Test);

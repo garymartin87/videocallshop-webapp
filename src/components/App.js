@@ -5,11 +5,12 @@ import ReduxToastr from 'react-redux-toastr';
 
 import history from '../history';
 
-import PrivateRoute from './PrivateRoute';
+import HasCallRequestRoute from './HasCallRequestRoute';
+import HasCallRoute from './HasCallRoute';
 import CreateCallRequest from './CreateCallRequest';
 import Call from './Call';
 import WaitingRoom from './WaitingRoom';
-import Thanks from './Thanks';
+import Home from './Home';
 
 import 'react-redux-toastr/lib/css/react-redux-toastr.min.css';
 
@@ -23,15 +24,15 @@ function App() {
                         exact
                         component={CreateCallRequest}
                     />
-                    <Route path="/thanks" exact component={Thanks} />
-                    <PrivateRoute
+                    <Route path="/home" exact component={Home} />
+                    <HasCallRequestRoute
                         path="/waiting-room"
                         exact
                         component={WaitingRoom}
                     />
-                    <PrivateRoute path="/call" exact component={Call} />
+                    <HasCallRoute path="/call" exact component={Call} />
                     {/* default state when not match found */}
-                    <Redirect to="/thanks" />
+                    <Redirect to="/home" />
                 </Switch>
             </Router>
             <ReduxToastr

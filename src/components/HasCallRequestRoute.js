@@ -2,7 +2,7 @@ import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-const PrivateRoute = ({
+const HasCallRequestRoute = ({
     component: Component,
     hasCallRequestToken,
     ...rest
@@ -30,4 +30,4 @@ const mapStateToProps = (state, ownProps) => {
     return { hasCallRequestToken: !!state.callRequest.callRequest };
 };
 
-export default connect(mapStateToProps, null)(PrivateRoute);
+export default connect(mapStateToProps, null)(HasCallRequestRoute);
