@@ -28,19 +28,22 @@ const Call = ({
 
     // Pulling EFFECT
     useEffect(() => {
-        console.log('::: WaitingRoom pulling EFFECT');
+        console.log('::: Call pulling EFFECT');
         const pulling = setInterval(refreshCallRequestState, 5000);
-        return () => clearInterval(pulling);
+        return () => { 
+            console.log('::: Call PULLING STOP');
+            clearInterval(pulling) 
+        };
     }, []);
 
     // Check State EFFECT
     useEffect(() => {
         console.log(
-            '::: WaitingRoom CHECK STATE EFFECT',
-            callRequest.callRequest.state
+            '::: Call CHECK STATE EFFECT',
+            callRequest.state
         );
 
-        if (callRequest.callRequest.state === 'CANCELLED') {
+        if (callRequest.state === 'CANCELLED') {
             cancelCallRequestSuccess();
             toastr.info('Info', 'Su llamada ha sido cancelada.');
         }
@@ -59,8 +62,8 @@ const Call = ({
     return (
         <OTSession
             apiKey={'46356842'}
-            token={call.call.tokboxTokenCallRequest}
-            sessionId={call.call.tokboxSessionId}
+            token={call.tokboxTokenCallRequest}
+            sessionId={call.tokboxSessionId}
         >
             <OTPublisher />
             <OTStreams>
@@ -72,8 +75,8 @@ const Call = ({
 
 const mapStateToProps = (state) => {
     return {
-        callRequest: state.callRequest,
-        call: state.call,
+        callRequest: state.callRequest.callRequest,
+        call: state.call.call,
     };
 };
 

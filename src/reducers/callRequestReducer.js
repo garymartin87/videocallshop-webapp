@@ -33,13 +33,12 @@ export default (state = INITIAL_STATE, action) => {
                 isFetching: false,
             };
         case CALL_REQUEST_REFRESH_STATE_SUCCESS:
-            console.log(
-                'callRequestReducer CALL_REQUEST_REFRESH_STATE_SUCCESS'
-            );
             return {
-                ...state,
-                callRequest: { state: action.payload },
-                isFetching: false,
+                callRequest: {
+                    ...state.callRequest,
+                    state: action.payload
+                },
+                isFetching: false
             };
         case CALL_REQUEST_CREATION_FAILED:
         case CALL_REQUEST_REFRESH_STATE_FAILED:

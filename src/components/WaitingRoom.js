@@ -92,15 +92,19 @@ const WaitingRoom = ({
         });
 
         return () => {
+            console.log("::: WaitingRoom DISCONNECT SOCKET");
             socket.disconnect();
         };
     }, []);
 
     // Pulling EFFECT
     useEffect(() => {
-        console.log('::: WaitingRoom pulling EFFECT');
+        console.log('::: WaitingRoom PULLING START');
         const pulling = setInterval(refreshCallRequestState, 5000);
-        return () => clearInterval(pulling);
+        return () => { 
+            console.log('::: WaitingRoom PULLING STOP');
+            clearInterval(pulling) 
+        };
     }, []);
 
     // Check no callRequest EFFECT
@@ -114,20 +118,24 @@ const WaitingRoom = ({
     useEffect(() => {
         console.log('::: WaitingRoom CHECK STATE EFFECT', callRequest.state);
 
-        if (callRequest.state === 'CALLED') {
-            toastr.info('Info', 'Ha sido llamado, aguarde un instante.');
-            fetchCallByCallRequest(callRequest);
-            history.push('/call');
-        }
+        switch(callRequest.state) {
+            case 'PROCESSING_CALL':
+                toastr.info('Info', 'Su llamada está siendo procesada.');
+                console.log('::: WaitingRoom PROCESSING CALL');
+                break;
+                
+            case 'CALLED':
+                toastr.info('Info', 'Ha sido llamado, aguarde un instante.');
+                fetchCallByCallRequest(callRequest);
+                break;
 
-        if (callRequest.state === 'CANCELLED') {
-            cancelCallRequestSuccess();
-            toastr.info('Info', 'Su llamada ha sido cancelada.');
-        }
-
-        if (callRequest.state === 'PROCESSING_CALL') {
-            toastr.info('Info', 'Su llamada está siendo procesada.');
-            console.log('::: WaitingRoom PROCESSING CALL');
+            case 'CANCELLED':
+                cancelCallRequestSuccess();
+                toastr.info('Info', 'Ha sido llamado, aguarde un instante.');
+                break
+            
+                
+                break;
         }
     }, [callRequest]);
 

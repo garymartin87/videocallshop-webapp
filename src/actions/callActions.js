@@ -1,5 +1,7 @@
 import videocallshopApi from '../apis/videocallshop';
 
+import history from '../history';
+
 import {
     CALL_FETCH_REQUESTED,
     CALL_FETCH_SUCCESS,
@@ -41,4 +43,6 @@ export const fetchCallSuccess = (call) => async (dispatch, getState) => {
         type: CALL_FETCH_SUCCESS,
         payload: call,
     });
+
+    history.push('/call');
 };
