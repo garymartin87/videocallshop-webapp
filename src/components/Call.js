@@ -26,14 +26,24 @@ const Call = ({
     });
     */
 
+   const [pulling, setPulling] = useState(null);
+
+    const destroyPulling = () => {
+        console.log('::: WaitingRoom destroyPulling PULLING STOP');
+        clearInterval(pulling);
+        setPulling(null);
+    }
+
     // Pulling EFFECT
     useEffect(() => {
-        console.log('::: Call pulling EFFECT');
-        const pulling = setInterval(refreshCallRequestState, 5000);
+        console.log('::: WaitingRoom PULLING START');
+        if(!pulling) {
+            setPulling(setInterval(refreshCallRequestState, 5000));
+        }
+
         return () => { 
-            console.log('::: Call PULLING STOP');
-            clearInterval(pulling) 
-        };
+            destroyPulling();
+        }
     }, []);
 
     // Check State EFFECT

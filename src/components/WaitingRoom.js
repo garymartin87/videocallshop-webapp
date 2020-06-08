@@ -27,6 +27,7 @@ const WaitingRoom = ({
     */
     const [socketConnected, setSocketConnected] = useState(false);
     const [queue, setQueue] = useState([]);
+    const [pulling, setPulling] = useState(null);
 
     /*
         HELPER FUNCTIONS
@@ -44,6 +45,12 @@ const WaitingRoom = ({
             return 0;
         }
     };
+
+    const destroyPulling = () => {
+        console.log('::: WaitingRoom destroyPulling PULLING STOP');
+        clearInterval(pulling);
+        setPulling(null);
+    }
 
     /*
         EFFECTS
@@ -100,11 +107,13 @@ const WaitingRoom = ({
     // Pulling EFFECT
     useEffect(() => {
         console.log('::: WaitingRoom PULLING START');
-        const pulling = setInterval(refreshCallRequestState, 5000);
+        if(!pulling) {
+            setPulling(setInterval(refreshCallRequestState, 5000));
+        }
+
         return () => { 
-            console.log('::: WaitingRoom PULLING STOP');
-            clearInterval(pulling) 
-        };
+            destroyPulling();
+        }
     }, []);
 
     // Check no callRequest EFFECT
@@ -126,15 +135,14 @@ const WaitingRoom = ({
                 
             case 'CALLED':
                 toastr.info('Info', 'Ha sido llamado, aguarde un instante.');
+                destroyPulling();
                 fetchCallByCallRequest(callRequest);
                 break;
 
             case 'CANCELLED':
+                destroyPulling();
                 cancelCallRequestSuccess();
-                toastr.info('Info', 'Ha sido llamado, aguarde un instante.');
-                break
-            
-                
+                toastr.info('Info', 'Ha sido llamado, aguarde un instante.');        
                 break;
         }
     }, [callRequest]);
