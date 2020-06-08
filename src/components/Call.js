@@ -59,19 +59,10 @@ const Call = ({
         }
     }, [callRequest]);
 
-    /*
-    return (
-        <Test
-            apiKey={'46356842'}
-            token={call.call.tokboxSessionId}
-            sessionId={call.call.tokboxTokenCallRequest}
-        />
-    );
-    */
-
+    // ToDo: Move apiKey
     return (
         <OTSession
-            apiKey={'46356842'}
+            apiKey={'46782344'}
             token={call.tokboxTokenCallRequest}
             sessionId={call.tokboxSessionId}
         >
