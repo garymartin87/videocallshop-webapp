@@ -141,9 +141,9 @@ const WaitingRoom = ({
                     break;
     
                 case 'CANCELLED':
+                    toastr.info('Info', 'Su llamada fue cancelada.');
                     destroyPulling();
                     cancelCallRequestSuccess();
-                    toastr.info('Info', 'Ha sido llamado, aguarde un instante.');        
                     break;
             }
         }
