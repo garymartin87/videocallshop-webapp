@@ -33,6 +33,8 @@ export const fetchCallByCallRequest = (callRequest) => async (
         dispatch({
             type: CALL_FETCH_FAILED,
         });
+
+        history.push('/waiting-room');
     }
 };
 

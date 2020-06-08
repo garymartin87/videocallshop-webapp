@@ -125,25 +125,27 @@ const WaitingRoom = ({
 
     // Check State EFFECT
     useEffect(() => {
-        console.log('::: WaitingRoom CHECK STATE EFFECT', callRequest.state);
+        if(pulling) {
+            console.log('::: WaitingRoom CHECK STATE EFFECT', callRequest.state);
 
-        switch(callRequest.state) {
-            case 'PROCESSING_CALL':
-                toastr.info('Info', 'Su llamada está siendo procesada.');
-                console.log('::: WaitingRoom PROCESSING CALL');
-                break;
-                
-            case 'CALLED':
-                toastr.info('Info', 'Ha sido llamado, aguarde un instante.');
-                destroyPulling();
-                fetchCallByCallRequest(callRequest);
-                break;
-
-            case 'CANCELLED':
-                destroyPulling();
-                cancelCallRequestSuccess();
-                toastr.info('Info', 'Ha sido llamado, aguarde un instante.');        
-                break;
+            switch(callRequest.state) {
+                case 'PROCESSING_CALL':
+                    toastr.info('Info', 'Su llamada está siendo procesada.');
+                    console.log('::: WaitingRoom PROCESSING CALL');
+                    break;
+                    
+                case 'CALLED':
+                    toastr.info('Info', 'Ha sido llamado, aguarde un instante.');
+                    destroyPulling();
+                    fetchCallByCallRequest(callRequest);
+                    break;
+    
+                case 'CANCELLED':
+                    destroyPulling();
+                    cancelCallRequestSuccess();
+                    toastr.info('Info', 'Ha sido llamado, aguarde un instante.');        
+                    break;
+            }
         }
     }, [callRequest]);
 
