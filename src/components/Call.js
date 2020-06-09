@@ -62,7 +62,7 @@ const Call = ({
     // ToDo: Move apiKey
     return (
         <OTSession
-            apiKey={'46782344'}
+            apiKey={call.tokboxApiKey}
             token={call.tokboxTokenCallRequest}
             sessionId={call.tokboxSessionId}
         >
