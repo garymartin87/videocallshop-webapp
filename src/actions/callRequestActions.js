@@ -3,6 +3,8 @@ import history from '../history';
 
 import { toastr } from 'react-redux-toastr';
 
+import { removeCall } from './callActions';
+
 import {
     CALL_REQUEST_CREATION_REQUESTED,
     CALL_REQUEST_CREATION_SUCCESS,
@@ -12,6 +14,7 @@ import {
     CALL_REQUEST_CANCEL_REQUESTED,
     CALL_REQUEST_CANCEL_SUCCESS,
     CALL_REQUEST_CANCEL_FAILED,
+    CALL_REQUEST_FINISH_SUCCESS,
     CALL_REQUEST_REFRESH_STATE_SUCCESS,
 } from './types';
 
@@ -149,6 +152,9 @@ export const cancelCallRequestSuccess = () => async (dispatch, getState) => {
     );
     if (storedCallRequest) {
         localStorage.removeItem('CALL_REQUEST');
+
+        dispatch(removeCall());
+
         dispatch({
             type: CALL_REQUEST_CANCEL_SUCCESS,
         });
@@ -159,4 +165,20 @@ export const cancelCallRequestSuccess = () => async (dispatch, getState) => {
 
         history.push('/home');
     }
+};
+
+// Finish
+export const finishCallRequestSuccess = (storeId, callRequestId) => async (
+    dispatch,
+    getState
+) => {
+    localStorage.removeItem('CALL_REQUEST');
+
+    dispatch(removeCall());
+
+    dispatch({
+        type: CALL_REQUEST_FINISH_SUCCESS
+    });
+
+    history.push('/home');
 };

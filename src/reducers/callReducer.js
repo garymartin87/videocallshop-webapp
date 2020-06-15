@@ -2,6 +2,7 @@ import {
     CALL_FETCH_REQUESTED,
     CALL_FETCH_SUCCESS,
     CALL_FETCH_FAILED,
+    CALL_REMOVE_SUCCESS
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -30,6 +31,8 @@ export default (state = INITIAL_STATE, action) => {
                 ...state,
                 isFetching: false,
             };
+        case CALL_REMOVE_SUCCESS:
+            return INITIAL_STATE;
         default:
             return state;
     }

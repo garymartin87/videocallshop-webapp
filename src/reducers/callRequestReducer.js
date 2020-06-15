@@ -8,6 +8,7 @@ import {
     CALL_REQUEST_REFRESH_STATE_REQUESTED,
     CALL_REQUEST_REFRESH_STATE_SUCCESS,
     CALL_REQUEST_REFRESH_STATE_FAILED,
+    CALL_REQUEST_FINISH_SUCCESS
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -59,6 +60,8 @@ export default (state = INITIAL_STATE, action) => {
                 ...state,
                 isFetching: false,
             };
+        case CALL_REQUEST_FINISH_SUCCESS:
+            return INITIAL_STATE;
         default:
             return state;
     }

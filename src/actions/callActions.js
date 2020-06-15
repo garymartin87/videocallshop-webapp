@@ -6,6 +6,7 @@ import {
     CALL_FETCH_REQUESTED,
     CALL_FETCH_SUCCESS,
     CALL_FETCH_FAILED,
+    CALL_REMOVE_SUCCESS
 } from './types';
 
 // Creation
@@ -47,4 +48,13 @@ export const fetchCallSuccess = (call) => async (dispatch, getState) => {
     });
 
     history.push('/call');
+};
+
+export const removeCall = () => async (dispatch, getState) => {
+    console.log("::::: REMOVE CALL");
+    localStorage.removeItem('CALL');
+
+    dispatch({
+        type: CALL_REMOVE_SUCCESS,
+    });
 };

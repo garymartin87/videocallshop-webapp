@@ -128,6 +128,7 @@ const WaitingRoom = ({
         if(pulling) {
             console.log('::: WaitingRoom CHECK STATE EFFECT', callRequest.state);
 
+            // eslint-disable-next-line default-case
             switch(callRequest.state) {
                 case 'PROCESSING_CALL':
                     toastr.info('Info', 'Su llamada está siendo procesada.');
