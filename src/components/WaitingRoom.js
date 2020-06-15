@@ -18,6 +18,7 @@ import history from '../history';
 const WaitingRoom = ({
     cancelCallRequest,
     callRequest,
+    hasCall,
     refreshCallRequestState,
     cancelCallRequestSuccess,
     fetchCallByCallRequest,
@@ -123,6 +124,13 @@ const WaitingRoom = ({
         }
     }, [callRequest]);
 
+    // Check no callRequest EFFECT
+    useEffect(() => {
+        if (hasCall) {
+            history.push('/call');
+        }
+    }, [hasCall]);
+
     // Check State EFFECT
     useEffect(() => {
         if(pulling) {
@@ -179,6 +187,7 @@ const WaitingRoom = ({
 const mapStateToProps = (state) => {
     return {
         callRequest: state.callRequest.callRequest,
+        hasCall: !!state.call.call,
     };
 };
 
