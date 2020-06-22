@@ -26,7 +26,7 @@ const Home = ({ callRequest, fetchStores, stores }) => {
     const renderStores = () => {
         let rows = stores.stores.map((store, index) => {
             return (
-                <p><button href="#" onClick={() => goToCreateCallRequest(store.storeId)} >{store.name}</button></p>
+                <p key={store.storeId}><button href="#" onClick={() => goToCreateCallRequest(store.storeId)} >{store.name}</button></p>
             );
         });
 
