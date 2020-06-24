@@ -100,14 +100,19 @@ export const refreshCallRequestStateSuccess = (state) => async (
     const { callRequest } = getState().callRequest;
 
     if (callRequest && callRequest.state !== state) {
-        const localStorageCallRequest = JSON.parse(
-            localStorage.getItem('CALL_REQUEST')
-        );
-        localStorageCallRequest.state = state;
-        localStorage.setItem(
-            'CALL_REQUEST',
-            JSON.stringify(localStorageCallRequest)
-        );
+        try {
+            const localStorageCallRequest = JSON.parse(
+                localStorage.getItem('CALL_REQUEST')
+            );
+            localStorageCallRequest.state = state;
+            localStorage.setItem(
+                'CALL_REQUEST',
+                JSON.stringify(localStorageCallRequest)
+            );
+        } catch (err) {
+            console.log(err);
+        }
+
         dispatch({
             type: CALL_REQUEST_REFRESH_STATE_SUCCESS,
             payload: state,
