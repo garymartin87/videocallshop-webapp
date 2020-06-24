@@ -111,6 +111,8 @@ export const refreshCallRequestStateSuccess = (state) => async (
             );
         } catch (err) {
             console.log(err);
+            console.log('callRequest.state', callRequest.state);
+            console.log('new state', state);
         }
 
         dispatch({
