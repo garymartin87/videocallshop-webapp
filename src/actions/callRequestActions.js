@@ -44,7 +44,7 @@ export const createCallRequest = (storeId, email, name, lastName) => async (
             'Error',
             err.response.status === 409 && err.response.data.message
                 ? err.response.data.message
-                : 'ocurrió un error'
+                : 'ocurrió un error 1'
         );
     }
 };
@@ -67,7 +67,7 @@ export const createCallRequestSuccess = (callRequest) => async (
 export const refreshCallRequestState = () => async (dispatch, getState) => {
     const { callRequest } = getState().callRequest;
     if (!callRequest) {
-        toastr.error('Error', 'ocurrió un error');
+        toastr.error('Error', 'ocurrió un error 2');
         return;
     }
 
@@ -89,7 +89,7 @@ export const refreshCallRequestState = () => async (dispatch, getState) => {
         dispatch({
             type: CALL_REQUEST_REFRESH_STATE_FAILED,
         });
-        toastr.error('Error', 'ocurrió un error');
+        toastr.error('Error', 'ocurrió un error 3');
     }
 };
 
@@ -147,7 +147,7 @@ export const cancelCallRequest = (storeId, callRequestId) => async (
         dispatch({
             type: CALL_REQUEST_CANCEL_FAILED,
         });
-        toastr.error('Error', 'ocurrió un error');
+        toastr.error('Error', 'ocurrió un error 4');
     }
 };
 

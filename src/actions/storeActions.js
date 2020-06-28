@@ -29,7 +29,7 @@ export const fetchStores = () => async (
         });
 
         toastr.error(
-            'Error', 'ocurrió un error'
+            'Error', 'ocurrió un error 5'
         );
     }
 };
