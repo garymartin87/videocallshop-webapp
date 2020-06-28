@@ -206,7 +206,7 @@ export const storePollingInterval = (intervalId) => async (
     console.log("::: CREATING POLLING INTERVAL");
     const intervalId = setInterval(() => {
         const { callRequest } = getState();
-        console.log('::: INTERVAL FIRED isAlreadyFeatching', callRequest.isFetching);
+        console.log('::: INTERVAL FIRED isAlreadyFetching', callRequest.isFetching);
         if(!callRequest.isFetching) {
             dispatch(refreshCallRequestState()) 
         }
@@ -222,8 +222,9 @@ export const removePollingInterval = () => async (
     dispatch,
     getState
 ) => {
-    const { callRequest } = getState().callRequest;
+    const { callRequest } = getState();
     if(callRequest.pollingInterval) {
+        console.log('::: CLEARING INTERVAL');
         clearInterval(callRequest.pollingInterval);
         dispatch({
             type: CALL_REQUEST_POLLING_INTERVAL_REMOVED
