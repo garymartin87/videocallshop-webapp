@@ -16,7 +16,6 @@ const Home = ({ callRequest, fetchStores, stores }) => {
     }, [callRequest.callRequest]);
 
     useEffect(() => {
-        console.log("::: useEffect");
         fetchStores();
     }, [])
 

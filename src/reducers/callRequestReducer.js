@@ -8,7 +8,9 @@ import {
     CALL_REQUEST_REFRESH_STATE_REQUESTED,
     CALL_REQUEST_REFRESH_STATE_SUCCESS,
     CALL_REQUEST_REFRESH_STATE_FAILED,
-    CALL_REQUEST_FINISH_SUCCESS
+    CALL_REQUEST_FINISH_SUCCESS,
+    CALL_REQUEST_POLLING_INTERVAL_CREATED,
+    CALL_REQUEST_POLLING_INTERVAL_REMOVED
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -16,6 +18,7 @@ const INITIAL_STATE = {
     callRequest: localStorage.getItem('CALL_REQUEST')
         ? JSON.parse(localStorage.getItem('CALL_REQUEST'))
         : null,
+    pollingInterval: null,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -35,6 +38,7 @@ export default (state = INITIAL_STATE, action) => {
             };
         case CALL_REQUEST_REFRESH_STATE_SUCCESS:
             return {
+                ...state,
                 callRequest: {
                     ...state.callRequest,
                     state: action.payload
@@ -54,14 +58,30 @@ export default (state = INITIAL_STATE, action) => {
                 isFetching: true,
             };
         case CALL_REQUEST_CANCEL_SUCCESS:
-            return INITIAL_STATE;
+            return {
+                ...state,
+                callRequest: null
+            };
         case CALL_REQUEST_CANCEL_FAILED:
             return {
                 ...state,
                 isFetching: false,
             };
         case CALL_REQUEST_FINISH_SUCCESS:
-            return INITIAL_STATE;
+            return {
+                ...state,
+                callRequest: null
+            };
+        case CALL_REQUEST_POLLING_INTERVAL_CREATED:
+            return {
+                ...state,
+                pollingInterval: action.payload,
+            };
+        case CALL_REQUEST_POLLING_INTERVAL_REMOVED:
+                return {
+                    ...state,
+                    pollingInterval: null,
+                };
         default:
             return state;
     }

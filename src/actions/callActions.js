@@ -14,7 +14,6 @@ export const fetchCallByCallRequest = (callRequest) => async (
     dispatch,
     getState
 ) => {
-    console.log('::: callActions fetchCallByCallRequest', callRequest);
     dispatch({
         type: CALL_FETCH_REQUESTED,
     });
@@ -51,8 +50,11 @@ export const fetchCallSuccess = (call) => async (dispatch, getState) => {
 };
 
 export const removeCall = () => async (dispatch, getState) => {
-    console.log("::::: REMOVE CALL");
-    localStorage.removeItem('CALL');
+    try {
+        localStorage.removeItem('CALL');
+    } catch (err) {
+        console.log('No Call');
+    }
 
     dispatch({
         type: CALL_REMOVE_SUCCESS,

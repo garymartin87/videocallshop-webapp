@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import '../styles/styles.scss';
 import { Container, Navbar } from 'react-bootstrap';
 
 import { Route, Router, Switch, Redirect } from 'react-router-dom';
 import ReduxToastr from 'react-redux-toastr'
+import { connect } from 'react-redux';
 
 import history from '../history';
-
+import { storePollingInterval } from '../actions/callRequestActions';
 import HasCallRequestRoute from './HasCallRequestRoute';
 import HasCallRoute from './HasCallRoute';
 import CreateCallRequest from './CreateCallRequest';
@@ -17,7 +18,13 @@ import Home from './Home';
 
 import 'react-redux-toastr/lib/css/react-redux-toastr.min.css';
 
-function App() {
+function App({ callRequest, storePollingInterval }) {
+    useEffect(() => {        
+        if(callRequest.callRequest && !callRequest.pollingInterval) {
+            storePollingInterval();
+        }
+    }, []);
+
     return (
         <>
             <Navbar bg="light" sticky="top" style={{ marginBottom: '25px' }}>
@@ -62,4 +69,15 @@ function App() {
     );
 }
 
-export default App;
+const mapStateToProps = (state) => {
+    return {
+        callRequest: state.callRequest,
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    {
+        storePollingInterval
+    } //connect actions creators to the component
+)(App);

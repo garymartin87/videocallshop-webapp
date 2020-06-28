@@ -7,7 +7,6 @@ import { toastr } from 'react-redux-toastr';
 
 import {
     cancelCallRequest,
-    refreshCallRequestState,
     cancelCallRequestSuccess,
 } from '../actions/callRequestActions';
 
@@ -19,7 +18,6 @@ const WaitingRoom = ({
     cancelCallRequest,
     callRequest,
     hasCall,
-    refreshCallRequestState,
     cancelCallRequestSuccess,
     fetchCallByCallRequest,
 }) => {
@@ -28,30 +26,23 @@ const WaitingRoom = ({
     */
     const [socketConnected, setSocketConnected] = useState(false);
     const [queue, setQueue] = useState([]);
-    const [pulling, setPulling] = useState(null);
 
     /*
         HELPER FUNCTIONS
     */
 
     const submitCancelCallRequest = () => {
-        const { storeId, callRequestId } = callRequest;
+        const { storeId, callRequestId } = callRequest.callRequest;
         cancelCallRequest(storeId, callRequestId);
     };
 
     const getPosition = () => {
-        if (callRequest && callRequest.callRequestId) {
-            return queue.indexOf(callRequest.callRequestId.toString()) + 1;
+        if (callRequest && callRequest.callRequest.callRequestId) {
+            return queue.indexOf(callRequest.callRequest.callRequestId.toString()) + 1;
         } else {
             return 0;
         }
     };
-
-    const destroyPulling = () => {
-        console.log('::: WaitingRoom destroyPulling PULLING STOP');
-        clearInterval(pulling);
-        setPulling(null);
-    }
 
     /*
         EFFECTS
@@ -62,17 +53,17 @@ const WaitingRoom = ({
         // ToDo: Move this to /api/callRequestSocket.js
         console.log('::: WaitingRoom CONNECTING SOCKET');
         const socket = socketIOClient(
-            `${process.env.REACT_APP_API_BASE_URL}?storeId=${callRequest.storeId}`,
+            `${process.env.REACT_APP_API_BASE_URL}?storeId=${callRequest.callRequest.storeId}`,
             {
                 path: '/waiting-room-socket',
                 cookie: false,
                 extraHeaders: {
-                    Authorization: `Bearer ${callRequest.token}`,
+                    Authorization: `Bearer ${callRequest.callRequest.token}`,
                 },
                 transportOptions: {
                     polling: {
                         extraHeaders: {
-                            Authorization: `Bearer ${callRequest.token}`,
+                            Authorization: `Bearer ${callRequest.callRequest.token}`,
                         },
                     },
                 },
@@ -105,18 +96,6 @@ const WaitingRoom = ({
         };
     }, []);
 
-    // Pulling EFFECT
-    useEffect(() => {
-        console.log('::: WaitingRoom PULLING START');
-        if(!pulling) {
-            setPulling(setInterval(refreshCallRequestState, 5000));
-        }
-
-        return () => { 
-            destroyPulling();
-        }
-    }, []);
-
     // Check no callRequest EFFECT
     useEffect(() => {
         if (!callRequest) {
@@ -132,29 +111,25 @@ const WaitingRoom = ({
     }, [hasCall]);
 
     // Check State EFFECT
-    useEffect(() => {
-        if(pulling) {
-            console.log('::: WaitingRoom CHECK STATE EFFECT', callRequest.state);
+    useEffect(() => {        
+        console.log('::: WaitingRoom CHECK STATE EFFECT', callRequest.callRequest.state);
 
-            // eslint-disable-next-line default-case
-            switch(callRequest.state) {
-                case 'PROCESSING_CALL':
-                    toastr.info('Info', 'Su llamada está siendo procesada.');
-                    console.log('::: WaitingRoom PROCESSING CALL');
-                    break;
-                    
-                case 'CALLED':
-                    toastr.info('Info', 'Ha sido llamado, aguarde un instante.');
-                    destroyPulling();
-                    fetchCallByCallRequest(callRequest);
-                    break;
-    
-                case 'CANCELLED':
-                    toastr.info('Info', 'Su llamada fue cancelada.');
-                    destroyPulling();
-                    cancelCallRequestSuccess();
-                    break;
-            }
+        // eslint-disable-next-line default-case
+        switch(callRequest.callRequest.state) {
+            case 'PROCESSING_CALL':
+                toastr.info('Info', 'Su llamada está siendo procesada.');
+                console.log('::: WaitingRoom PROCESSING CALL');
+                break;
+                
+            case 'CALLED':
+                toastr.info('Info', 'Ha sido llamado, aguarde un instante.');
+                fetchCallByCallRequest(callRequest.callRequest);
+                break;
+
+            case 'CANCELLED':
+                toastr.info('Info', 'Su llamada fue cancelada.');
+                cancelCallRequestSuccess();
+                break;
         }
     }, [callRequest]);
 
@@ -164,16 +139,19 @@ const WaitingRoom = ({
 
             <div style={{ textAlign: 'center' }}>
                 <h1 style={{ textAlign: 'center' }}>
-                    TIENDA ID: {callRequest.storeId}
+                    TIENDA ID: {callRequest.callRequest.storeId}
                 </h1>
                 <h3>{socketConnected ? 'CONNECTED' : 'DISCONNECTED'}</h3>
             </div>
             <hr />
             <h4>MY callRequestId</h4>
-            <p>{callRequest.callRequestId}</p>
+            <p>{callRequest.callRequest.callRequestId}</p>
+
+            <h4>INTERVAL ID</h4>
+            <p>{callRequest.pollingInterval}</p>
 
             <h4>Token</h4>
-            <p>{callRequest.token}</p>
+            <p>{callRequest.callRequest.token}</p>
 
             <h4>POSITION</h4>
             <div>{getPosition()}</div>
@@ -186,7 +164,7 @@ const WaitingRoom = ({
 
 const mapStateToProps = (state) => {
     return {
-        callRequest: state.callRequest.callRequest,
+        callRequest: state.callRequest,
         hasCall: !!state.call.call,
     };
 };
@@ -195,8 +173,7 @@ export default connect(
     mapStateToProps,
     {
         cancelCallRequest,
-        refreshCallRequestState,
         fetchCallByCallRequest,
-        cancelCallRequestSuccess,
+        cancelCallRequestSuccess
     } //connect actions creators to the component
 )(WaitingRoom);

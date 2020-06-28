@@ -5,7 +5,6 @@ import { OTSession, OTPublisher, OTStreams, OTSubscriber } from 'opentok-react';
 import history from '../history';
 
 import {
-    refreshCallRequestState,
     cancelCallRequestSuccess,
     finishCallRequestSuccess
 } from '../actions/callRequestActions';
@@ -17,39 +16,9 @@ import { toastr } from 'react-redux-toastr';
 const Call = ({
     callRequest,
     call,
-    refreshCallRequestState,
     cancelCallRequestSuccess,
     finishCallRequestSuccess
 }) => {
-    console.log('::: Call', call);
-    /*
-    const [tokboxProps, setTokboxProps] = useState({
-        apiKey: '46356842',
-        sessionId: call.call.tokboxSessionId,
-        token: call.call.tokboxTokenCallRequest,
-    });
-    */
-
-   const [pulling, setPulling] = useState(null);
-
-    const destroyPulling = () => {
-        console.log('::: WaitingRoom destroyPulling PULLING STOP');
-        clearInterval(pulling);
-        setPulling(null);
-    }
-
-    // Pulling EFFECT
-    useEffect(() => {
-        console.log('::: WaitingRoom PULLING START');
-        if(!pulling) {
-            setPulling(setInterval(refreshCallRequestState, 5000));
-        }
-
-        return () => { 
-            destroyPulling();
-        }
-    }, []);
-
     // Check no call EFFECT
     useEffect(() => {
         if (!call) {
@@ -72,13 +41,11 @@ const Call = ({
         );
 
         if (callRequest && callRequest.state === 'CANCELLED') {
-            destroyPulling();
             cancelCallRequestSuccess();
             toastr.info('Info', 'Su llamada ha sido cancelada.');
         }
 
         if (callRequest && callRequest.state === 'FINISHED') {
-            destroyPulling();
             finishCallRequestSuccess();
             toastr.info('Info', 'Su llamada ha sido finalizada.');
         }
@@ -111,7 +78,6 @@ const mapStateToProps = (state) => {
 export default connect(
     mapStateToProps,
     {
-        refreshCallRequestState,
         cancelCallRequestSuccess,
         finishCallRequestSuccess,
     } //connect actions creators to the component

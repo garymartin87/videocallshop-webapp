@@ -16,6 +16,8 @@ import {
     CALL_REQUEST_CANCEL_FAILED,
     CALL_REQUEST_FINISH_SUCCESS,
     CALL_REQUEST_REFRESH_STATE_SUCCESS,
+    CALL_REQUEST_POLLING_INTERVAL_CREATED,
+    CALL_REQUEST_POLLING_INTERVAL_REMOVED
 } from './types';
 
 // Creation
@@ -53,12 +55,15 @@ export const createCallRequestSuccess = (callRequest) => async (
     dispatch,
     getState
 ) => {
+    // create call request
     localStorage.setItem('CALL_REQUEST', JSON.stringify(callRequest));
-
     dispatch({
         type: CALL_REQUEST_CREATION_SUCCESS,
         payload: callRequest,
     });
+
+    // create polling interval
+    dispatch(storePollingInterval());
 
     history.push('/waiting-room');
 };
@@ -67,7 +72,6 @@ export const createCallRequestSuccess = (callRequest) => async (
 export const refreshCallRequestState = () => async (dispatch, getState) => {
     const { callRequest } = getState().callRequest;
     if (!callRequest) {
-        toastr.error('Error', 'ocurrió un error 2');
         return;
     }
 
@@ -99,27 +103,25 @@ export const refreshCallRequestStateSuccess = (state) => async (
 ) => {
     const { callRequest } = getState().callRequest;
 
-    if (callRequest && callRequest.state !== state) {
-        try {
-            const localStorageCallRequest = JSON.parse(
-                localStorage.getItem('CALL_REQUEST')
-            );
-            localStorageCallRequest.state = state;
-            localStorage.setItem(
-                'CALL_REQUEST',
-                JSON.stringify(localStorageCallRequest)
-            );
-        } catch (err) {
-            console.log(err);
-            console.log('callRequest.state', callRequest.state);
-            console.log('new state', state);
-        }
-
-        dispatch({
-            type: CALL_REQUEST_REFRESH_STATE_SUCCESS,
-            payload: state,
-        });
+    try {
+        const localStorageCallRequest = JSON.parse(
+            localStorage.getItem('CALL_REQUEST')
+        );
+        localStorageCallRequest.state = state;
+        localStorage.setItem(
+            'CALL_REQUEST',
+            JSON.stringify(localStorageCallRequest)
+        );
+    } catch (err) {
+        console.log(err);
+        console.log('callRequest.state', callRequest.state);
+        console.log('new state', state);
     }
+
+    dispatch({
+        type: CALL_REQUEST_REFRESH_STATE_SUCCESS,
+        payload: state,
+    });
 };
 
 // Cancel
@@ -152,26 +154,16 @@ export const cancelCallRequest = (storeId, callRequestId) => async (
 };
 
 export const cancelCallRequestSuccess = () => async (dispatch, getState) => {
-    const storedCallRequest = JSON.parse(localStorage.getItem('CALL_REQUEST'));
-    console.log(
-        '::: callRequestActions cancelCallRequestSuccess storedCallRequest:',
-        storedCallRequest
-    );
-    if (storedCallRequest) {
-        localStorage.removeItem('CALL_REQUEST');
+    dispatch(removeCallRequest());
 
-        dispatch(removeCall());
+    // remove call
+    dispatch(removeCall());
 
-        dispatch({
-            type: CALL_REQUEST_CANCEL_SUCCESS,
-        });
+    dispatch({
+        type: CALL_REQUEST_CANCEL_SUCCESS,
+    });
 
-        console.log(
-            '::: callRequestActions cancelCallRequestSuccess REDIRECTING HOME'
-        );
-
-        history.push('/home');
-    }
+    history.push('/home');
 };
 
 // Finish
@@ -179,8 +171,9 @@ export const finishCallRequestSuccess = (storeId, callRequestId) => async (
     dispatch,
     getState
 ) => {
-    localStorage.removeItem('CALL_REQUEST');
+    dispatch(removeCallRequest());
 
+    // remove call
     dispatch(removeCall());
 
     dispatch({
@@ -188,4 +181,52 @@ export const finishCallRequestSuccess = (storeId, callRequestId) => async (
     });
 
     history.push('/home');
+};
+
+const removeCallRequest = () => async (
+    dispatch,
+    getState
+) => {
+    // destroy polling interval
+    dispatch(removePollingInterval());
+    
+    // remove stored call request
+    try {
+        localStorage.removeItem('CALL_REQUEST');
+    } catch(err) {
+        console.log('No stored callRequest');
+    }
+};
+
+// Polling
+export const storePollingInterval = (intervalId) => async (
+    dispatch,
+    getState
+) => {
+    console.log("::: CREATING POLLING INTERVAL");
+    const intervalId = setInterval(() => {
+        const { callRequest } = getState();
+        console.log('::: INTERVAL FIRED isAlreadyFeatching', callRequest.isFetching);;
+        if(!callRequest.isFetching) {
+            dispatch(refreshCallRequestState()) 
+        }
+    }, 5000);
+
+    dispatch({
+        type: CALL_REQUEST_POLLING_INTERVAL_CREATED,
+        payload: intervalId
+    });
+};
+
+export const removePollingInterval = () => async (
+    dispatch,
+    getState
+) => {
+    const { callRequest } = getState().callRequest;
+    if(callRequest.pollingInterval) {
+        clearInterval(callRequest.pollingInterval);
+        dispatch({
+            type: CALL_REQUEST_POLLING_INTERVAL_REMOVED
+        });
+    }
 };
