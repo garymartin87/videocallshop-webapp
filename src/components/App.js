@@ -2,7 +2,6 @@ import React from 'react';
 
 import '../styles/styles.scss';
 import { Container, Navbar } from 'react-bootstrap';
-// import '../styles.scss';
 
 import { Route, Router, Switch, Redirect } from 'react-router-dom';
 import ReduxToastr from 'react-redux-toastr'

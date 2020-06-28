@@ -32,7 +32,7 @@ const Home = ({ callRequest, fetchStores, stores }) => {
                 <Card key={store.storeId} style={{ marginBottom: '15px' }}>
                     <Card.Body>
                         <Row>
-                            <Col md={3}>
+                            <Col md={3} xs={3}>
                                 <Card.Img 
                                     src={ store.logoImageXxxhdpiUrl } 
                                     roundedCircle 
@@ -41,11 +41,11 @@ const Home = ({ callRequest, fetchStores, stores }) => {
                                 ></Card.Img>
                             </Col>
 
-                            <Col md={6}>
+                            <Col md={6} xs={6}>
                                 <h2>{store.name}</h2>
                             </Col>
 
-                            <Col md={3}>
+                            <Col md={3} xs={3}>
                                 <Button 
                                     size="lg" 
                                     href="#" 
