@@ -39,6 +39,7 @@ export const fetchCallByCallRequest = (callRequest) => async (
 };
 
 export const fetchCallSuccess = (call) => async (dispatch, getState) => {
+    console.log('::: callActions fetchCallSuccess');
     localStorage.setItem('CALL', JSON.stringify(call));
 
     dispatch({

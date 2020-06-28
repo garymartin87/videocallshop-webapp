@@ -32,7 +32,10 @@ export default (state = INITIAL_STATE, action) => {
                 isFetching: false,
             };
         case CALL_REMOVE_SUCCESS:
-            return INITIAL_STATE;
+            return {
+                ...state,
+                call: null,
+            };
         default:
             return state;
     }

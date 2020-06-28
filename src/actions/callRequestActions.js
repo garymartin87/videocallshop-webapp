@@ -206,7 +206,7 @@ export const storePollingInterval = (intervalId) => async (
     console.log("::: CREATING POLLING INTERVAL");
     const intervalId = setInterval(() => {
         const { callRequest } = getState();
-        console.log('::: INTERVAL FIRED isAlreadyFeatching', callRequest.isFetching);;
+        console.log('::: INTERVAL FIRED isAlreadyFeatching', callRequest.isFetching);
         if(!callRequest.isFetching) {
             dispatch(refreshCallRequestState()) 
         }
