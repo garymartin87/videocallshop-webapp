@@ -1,7 +1,11 @@
 import React from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
+
+import '../styles/styles.scss';
+import { Container, Navbar } from 'react-bootstrap';
+// import '../styles.scss';
+
 import { Route, Router, Switch, Redirect } from 'react-router-dom';
-import ReduxToastr from 'react-redux-toastr';
+import ReduxToastr from 'react-redux-toastr'
 
 import history from '../history';
 
@@ -16,40 +20,46 @@ import 'react-redux-toastr/lib/css/react-redux-toastr.min.css';
 
 function App() {
     return (
-        <div className="container">
-            <Router history={history}>
-                <Switch>
-                    <Route
-                        path="/:storeId/create-call-request"
-                        exact
-                        component={CreateCallRequest}
-                    />
-                    <Route path="/home" exact component={Home} />
-                    <HasCallRequestRoute
-                        path="/waiting-room"
-                        exact
-                        component={WaitingRoom}
-                    />
-                    <HasCallRoute path="/call" exact component={Call} />
-                    {/* default state when not match found */}
-                    <Redirect to="/home" />
-                </Switch>
-            </Router>
-            <ReduxToastr
-                timeOut={4000}
-                newestOnTop={false}
-                preventDuplicates
-                position="top-right"
-                transitionIn="fadeIn"
-                transitionOut="fadeOut"
-                progressBar
-                closeOnToastrClick
-                confirmOptions={{
-                    okText: 'aceptar',
-                    cancelText: 'cancelar',
-                }}
-            />
-        </div>
+        <>
+            <Navbar bg="light" sticky="top" style={{ marginBottom: '25px' }}>
+                <Navbar.Brand>VIDEO CALL SHOP</Navbar.Brand>
+            </Navbar>
+        
+            <Container>
+                <Router history={history}>
+                    <Switch>
+                        <Route
+                            path="/:storeId/create-call-request"
+                            exact
+                            component={CreateCallRequest}
+                        />
+                        <Route path="/home" exact component={Home} />
+                        <HasCallRequestRoute
+                            path="/waiting-room"
+                            exact
+                            component={WaitingRoom}
+                        />
+                        <HasCallRoute path="/call" exact component={Call} />
+                        {/* default state when not match found */}
+                        <Redirect to="/home" />
+                    </Switch>
+                </Router>
+                <ReduxToastr
+                    timeOut={4000}
+                    newestOnTop={false}
+                    preventDuplicates
+                    position="top-right"
+                    transitionIn="fadeIn"
+                    transitionOut="fadeOut"
+                    progressBar
+                    closeOnToastrClick
+                    confirmOptions={{
+                        okText: 'aceptar',
+                        cancelText: 'cancelar',
+                    }}
+                />
+            </Container>
+        </>
     );
 }
 

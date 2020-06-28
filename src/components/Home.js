@@ -1,5 +1,8 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
+import { Row, Col, Button, Card } from 'react-bootstrap';
+import { FaVideo } from 'react-icons/fa';
+
 import history from '../history';
 
 import {
@@ -26,7 +29,35 @@ const Home = ({ callRequest, fetchStores, stores }) => {
     const renderStores = () => {
         let rows = stores.stores.map((store, index) => {
             return (
-                <p key={store.storeId}><button href="#" onClick={() => goToCreateCallRequest(store.storeId)} >{store.name}</button></p>
+                <Card key={store.storeId} style={{ marginBottom: '15px' }}>
+                    <Card.Body>
+                        <Row>
+                            <Col md={3}>
+                                <Card.Img 
+                                    src={ store.logoImageXxxhdpiUrl } 
+                                    roundedCircle 
+                                    className='float-left'
+                                    style={{ width: '50px' }}
+                                ></Card.Img>
+                            </Col>
+
+                            <Col md={6}>
+                                <h2>{store.name}</h2>
+                            </Col>
+
+                            <Col md={3}>
+                                <Button 
+                                    size="lg" 
+                                    href="#" 
+                                    className="float-right" 
+                                    onClick={() => goToCreateCallRequest(store.storeId)}
+                                >
+                                    <FaVideo />
+                                </Button>
+                            </Col>
+                        </Row>
+                    </Card.Body>
+                </Card>
             );
         });
 
@@ -34,22 +65,23 @@ const Home = ({ callRequest, fetchStores, stores }) => {
     };
 
     return (
-        <div>
-            <h1>Home</h1>
+        <Row>
+            <Col md={{ span: 6, offset: 3 }} xs={{ span: 12, offset: 0 }}>
+                <h4>Seleccione una tienda a llamar</h4>
 
-            {stores.isFetching && (
-                <>
-                    <p>Cargando tiendas</p>
-                </>
-            )}
+                {stores.isFetching && (
+                    <>
+                        <p>Cargando tiendas</p>
+                    </>
+                )}
 
-            {!stores.isFetching && (
-                <>
-                    {renderStores()}
-                </>
-            )}
-
-        </div>
+                {!stores.isFetching && (
+                    <>
+                        {renderStores()}
+                    </>
+                )}
+            </Col>
+        </Row>
     );
 };
 
