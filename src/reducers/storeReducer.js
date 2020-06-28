@@ -4,9 +4,11 @@ import {
     STORES_FETCH_FAILED
 } from '../actions/types';
 
+import _ from 'lodash';
+
 const INITIAL_STATE = {
     isFetching: false,
-    stores: []
+    stores: {}
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -20,7 +22,7 @@ export default (state = INITIAL_STATE, action) => {
         case STORES_FETCH_SUCCESS:
             return {
                 ...state,
-                stores: action.payload,
+                stores: { ..._.mapKeys(action.payload, 'storeId') },
                 isFetching: false,
             };
         case STORES_FETCH_FAILED:

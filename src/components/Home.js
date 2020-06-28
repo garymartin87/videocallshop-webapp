@@ -5,9 +5,7 @@ import { FaVideo } from 'react-icons/fa';
 
 import history from '../history';
 
-import {
-    fetchStores
-} from '../actions/storeActions';
+import { fetchStores } from '../actions/storeActions';
 
 const Home = ({ callRequest, fetchStores, stores }) => {
     useEffect(() => {
@@ -27,7 +25,7 @@ const Home = ({ callRequest, fetchStores, stores }) => {
     };
 
     const renderStores = () => {
-        let rows = stores.stores.map((store, index) => {
+        let rows = Object.values(stores.stores).map((store, index) => {
             return (
                 <Card key={store.storeId} style={{ marginBottom: '15px' }}>
                     <Card.Body>
@@ -35,7 +33,6 @@ const Home = ({ callRequest, fetchStores, stores }) => {
                             <Col md={3} xs={3}>
                                 <Card.Img 
                                     src={ store.logoImageXxxhdpiUrl } 
-                                    roundedCircle 
                                     className='float-left'
                                     style={{ width: '50px' }}
                                 ></Card.Img>

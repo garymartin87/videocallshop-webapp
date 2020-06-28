@@ -1,11 +1,13 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useForm } from 'react-hook-form';
+import { Row, Col, Image } from 'react-bootstrap';
 
 import { createCallRequest } from '../actions/callRequestActions';
+import { fetchStores } from '../actions/storeActions';
 import history from '../history';
 
-const CreateCallRequest = ({ createCallRequest, callRequest, match }) => {
+const CreateCallRequest = ({ createCallRequest, callRequest, fetchStores, store, match }) => {
     const { register, handleSubmit, errors } = useForm();
     const onSubmit = (data) => {
         const { email, name, lastName } = data;
@@ -14,65 +16,89 @@ const CreateCallRequest = ({ createCallRequest, callRequest, match }) => {
     };
 
     useEffect(() => {
+        if(!store) {
+            fetchStores();
+        }
+    }, []);
+
+    useEffect(() => {
         if (callRequest.callRequest) {
             history.push('/waiting-room');
         }
     }, [callRequest.callRequest]);
 
     return (
-        <div className="row">
-            <div className="col-lg-4 offset-lg-4 col-md-6 offset-md-3 col-xs-12">
-                <form
-                    id="create-call-request-form"
-                    onSubmit={handleSubmit(onSubmit)}
-                >
-                    <div className="form-group">
-                        <label>Email</label>
-                        <input
-                            type="email"
-                            className="form-control"
-                            name="email"
-                            ref={register({ required: true })}
-                        />
-                        {errors.email && <span>This field is required</span>}
-                    </div>
-                    <div className="form-group">
-                        <label>Nombre</label>
-                        <input
-                            name="name"
-                            type="text"
-                            className="form-control"
-                            ref={register({ required: true })}
-                        />
-                        {errors.name && <span>This field is required</span>}
-                    </div>
-                    <div className="form-group">
-                        <label>Apellido</label>
-                        <input
-                            name="lastName"
-                            type="text"
-                            className="form-control"
-                            ref={register({ required: true })}
-                        />
-                        {errors.lastName && <span>This field is required</span>}
-                    </div>
+        <>
+            <Row>
+                <Col lg={{span: 4, offset: 4}} md={{span: 6, offset: 3}} xs={{span: 12, offset: 0}}>
+                    {
+                        !store && <p>Cargando información de la tienda</p>
+                    }
 
-                    <button type="submit" className="btn btn-primary">
-                        Ingresar a sala de espera
-                    </button>
-                </form>
-            </div>
-        </div>
+                    {
+                        store && <Row>
+                            <Col lg={3} md={3} xs={3}><Image src={store.logoImageXxxhdpiUrl} style={{ width: '50px' }}></Image></Col>
+                            <Col lg={9} md={9} xs={9}><h2>{store.name}</h2></Col>
+                        </Row>
+                    }
+                </Col>
+            </Row>
+            
+            <Row style={{ marginTop: '20px' }}>
+                <Col lg={{span: 4, offset: 4}} md={{span: 6, offset: 3}} xs={{span: 12, offset: 0}}>
+                    <form
+                        id="create-call-request-form"
+                        onSubmit={handleSubmit(onSubmit)}
+                    >
+                        <div className="form-group">
+                            <label>Email</label>
+                            <input
+                                type="email"
+                                className="form-control"
+                                name="email"
+                                ref={register({ required: true })}
+                            />
+                            {errors.email && <span>This field is required</span>}
+                        </div>
+                        <div className="form-group">
+                            <label>Nombre</label>
+                            <input
+                                name="name"
+                                type="text"
+                                className="form-control"
+                                ref={register({ required: true })}
+                            />
+                            {errors.name && <span>This field is required</span>}
+                        </div>
+                        <div className="form-group">
+                            <label>Apellido</label>
+                            <input
+                                name="lastName"
+                                type="text"
+                                className="form-control"
+                                ref={register({ required: true })}
+                            />
+                            {errors.lastName && <span>This field is required</span>}
+                        </div>
+
+                        <button type="submit" className="btn btn-primary">
+                            Ingresar a sala de espera
+                        </button>
+                    </form>
+                </Col>
+            </Row>
+        </>
     );
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
     return {
         callRequest: state.callRequest,
+        store: state.stores.stores[ownProps.match.params.storeId]
     };
 };
 
 export default connect(
     mapStateToProps,
-    { createCallRequest } //connect actions creators to the component
+    { createCallRequest, fetchStores } //connect actions creators to the component
 )(CreateCallRequest);
