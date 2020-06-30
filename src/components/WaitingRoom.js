@@ -150,7 +150,7 @@ const WaitingRoom = ({
                 <Col md={{ span: 12, offset: 0 }} xs={{ span: 12, offset: 0 }}>
                     <Button
                         href="#" 
-                        className="float-right" 
+                        className="btn-warning float-right" 
                         onClick={submitCancelCallRequest}
                     >
                         <FaTimes /> Salir de la fila
