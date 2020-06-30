@@ -4,13 +4,13 @@
 
 $theme-colors: (
     "primary": #e31f1b,
-    "secondary": #e31f1b,
-    "success": #e31f1b,
-    "info": #e31f1b,
-    "warning": #e31f1b,
-    "danger": #e31f1b,
     "light": #e31f1b,
     "dark": #e31f1b
 );
+
+.navbar-brand {
+    color: white !important;
+    font-weight: 700;
+}
 
 @import "bootstrap";

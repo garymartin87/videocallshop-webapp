@@ -5,6 +5,9 @@ import { connect } from 'react-redux';
 
 import { toastr } from 'react-redux-toastr';
 
+import { Row, Col, Button } from 'react-bootstrap';
+import { FaTimes, FaSpinner } from 'react-icons/fa';
+
 import {
     cancelCallRequest,
     cancelCallRequestSuccess,
@@ -134,31 +137,27 @@ const WaitingRoom = ({
     }, [callRequest]);
 
     return (
-        <div>
-            <h1>WaitingRoom</h1>
-
-            <div style={{ textAlign: 'center' }}>
-                <h1 style={{ textAlign: 'center' }}>
-                    TIENDA ID: {callRequest.callRequest.storeId}
-                </h1>
-                <h3>{socketConnected ? 'CONNECTED' : 'DISCONNECTED'}</h3>
-            </div>
-            <hr />
-            <h4>MY callRequestId</h4>
-            <p>{callRequest.callRequest.callRequestId}</p>
-
-            <h4>INTERVAL ID</h4>
-            <p>{callRequest.pollingInterval}</p>
-
-            <h4>Token</h4>
-            <p>{callRequest.callRequest.token}</p>
-
-            <h4>POSITION</h4>
-            <div>{getPosition()}</div>
-            <div>
-                <button onClick={submitCancelCallRequest}>Cancelar</button>
-            </div>
-        </div>
+        <>
+            <Row className='text-center'>
+                <Col md={{ span: 6, offset: 3 }} xs={{ span: 12, offset: 0 }}>
+                    <h4>Usted se encuentra en la fila para ser atendido</h4>
+                    <h5>Su posición es</h5>
+                    <div style={{ fontSize: '130px' }}>{getPosition()}</div>
+                    { callRequest.isFetching && <div className="text-info"><FaSpinner/> Verificando estado...</div> }
+                </Col>
+            </Row>
+            <Row className='container text-right fixed-bottom row' style={{ marginBottom: '40px' }}>
+                <Col md={{ span: 12, offset: 0 }} xs={{ span: 12, offset: 0 }}>
+                    <Button
+                        href="#" 
+                        className="float-right" 
+                        onClick={submitCancelCallRequest}
+                    >
+                        <FaTimes /> Salir de la fila
+                    </Button>
+                </Col>
+            </Row>
+        </>
     );
 };
 
