@@ -13,6 +13,12 @@ import {
     cancelCallRequestSuccess,
 } from '../actions/callRequestActions';
 
+import StoreHeader from './StoreHeader';
+
+import {
+    fetchStores
+} from '../actions/storeActions';
+
 import { fetchCallByCallRequest } from '../actions/callActions';
 
 import history from '../history';
@@ -20,7 +26,9 @@ import history from '../history';
 const WaitingRoom = ({
     cancelCallRequest,
     callRequest,
+    store,
     hasCall,
+    fetchStores,
     cancelCallRequestSuccess,
     fetchCallByCallRequest,
 }) => {
@@ -113,6 +121,13 @@ const WaitingRoom = ({
         }
     }, [hasCall]);
 
+    // Check store info EFFECT
+    useEffect(() => {
+        if(!store) {
+            fetchStores();
+        }
+    }, []);
+
     // Check State EFFECT
     useEffect(() => {        
         console.log('::: WaitingRoom CHECK STATE EFFECT', callRequest.callRequest.state);
@@ -138,6 +153,7 @@ const WaitingRoom = ({
 
     return (
         <>
+            <StoreHeader store={store} />  
             <Row className='text-center'>
                 <Col md={{ span: 6, offset: 3 }} xs={{ span: 12, offset: 0 }}>
                     <h4>Usted se encuentra en la fila para ser atendido</h4>
@@ -164,6 +180,7 @@ const WaitingRoom = ({
 const mapStateToProps = (state) => {
     return {
         callRequest: state.callRequest,
+        store: state.stores.stores[state.callRequest.callRequest.storeId],
         hasCall: !!state.call.call,
     };
 };
@@ -173,6 +190,7 @@ export default connect(
     {
         cancelCallRequest,
         fetchCallByCallRequest,
-        cancelCallRequestSuccess
+        cancelCallRequestSuccess,
+        fetchStores
     } //connect actions creators to the component
 )(WaitingRoom);

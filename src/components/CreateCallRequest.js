@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useForm } from 'react-hook-form';
-import { Row, Col, Image } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
 
 import { createCallRequest } from '../actions/callRequestActions';
+import StoreHeader from './StoreHeader';
 import { fetchStores } from '../actions/storeActions';
 import history from '../history';
 
@@ -29,21 +30,7 @@ const CreateCallRequest = ({ createCallRequest, callRequest, fetchStores, store,
 
     return (
         <>
-            <Row>
-                <Col lg={{span: 4, offset: 4}} md={{span: 6, offset: 3}} xs={{span: 12, offset: 0}}>
-                    {
-                        !store && <p>Cargando información de la tienda</p>
-                    }
-
-                    {
-                        store && <Row>
-                            <Col lg={3} md={3} xs={3}><Image src={store.logoImageXxxhdpiUrl} style={{ width: '50px' }}></Image></Col>
-                            <Col lg={9} md={9} xs={9}><h2>{store.name}</h2></Col>
-                        </Row>
-                    }
-                </Col>
-            </Row>
-            
+            <StoreHeader store={store} />  
             <Row style={{ marginTop: '20px' }}>
                 <Col lg={{span: 4, offset: 4}} md={{span: 6, offset: 3}} xs={{span: 12, offset: 0}}>
                     <form
