@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { OTSession, OTPublisher, OTStreams, OTSubscriber } from 'opentok-react';
 
+import { Row, Col } from 'react-bootstrap';
+
 import history from '../history';
 
 import {
@@ -51,20 +53,30 @@ const Call = ({
         }
     }, [callRequest]);
 
-    // ToDo: Move apiKey
     return (
-        <div>
-            <OTSession
-                apiKey={call.tokboxApiKey}
-                token={call.tokboxTokenCallRequest}
-                sessionId={call.tokboxSessionId}
-            >
-                <OTPublisher />
-                <OTStreams>
-                    <OTSubscriber />
-                </OTStreams>
-            </OTSession>
-        </div>
+        <Row>
+            <Col lg={12} md={12} xs={12}>
+                <OTSession
+                    apiKey={call.tokboxApiKey}
+                    token={call.tokboxTokenCallRequest}
+                    sessionId={call.tokboxSessionId}
+                >
+                    <div id="publisher"><OTPublisher /></div>
+                    <OTStreams>
+                        <div id="subscriber">
+                            <OTSubscriber 
+                                properties={{ 
+                                    insertMode: 'append',
+                                    fitMode: true, 
+                                    width: '100%', 
+                                    height: '100%' 
+                                }}
+                            />
+                        </div>
+                    </OTStreams>
+                </OTSession>
+            </Col>
+        </Row>
     );
 };
 

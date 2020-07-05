@@ -11,7 +11,7 @@ const StoreHeader = ({ store }) => {
                 }
 
                 {
-                    store && <div class="text-center">
+                    store && <div className="text-center">
                         <Row><Col lg={12} md={12} xs={12}><Image src={store.logoImageXxxhdpiUrl} style={{ width: '50px' }}></Image></Col></Row>
                         <Row><Col lg={12} md={12} xs={12}><h2>{store.name}</h2></Col></Row>
                         <hr/>

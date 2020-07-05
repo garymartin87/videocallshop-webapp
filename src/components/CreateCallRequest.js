@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useForm } from 'react-hook-form';
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, Container } from 'react-bootstrap';
 
 import { createCallRequest } from '../actions/callRequestActions';
 import StoreHeader from './StoreHeader';
@@ -29,7 +29,7 @@ const CreateCallRequest = ({ createCallRequest, callRequest, fetchStores, store,
     }, [callRequest.callRequest]);
 
     return (
-        <>
+        <Container style={{ marginTop: '20px' }}>
             <StoreHeader store={store} />  
             <Row style={{ marginTop: '20px' }}>
                 <Col lg={{span: 4, offset: 4}} md={{span: 6, offset: 3}} xs={{span: 12, offset: 0}}>
@@ -74,7 +74,7 @@ const CreateCallRequest = ({ createCallRequest, callRequest, fetchStores, store,
                     </form>
                 </Col>
             </Row>
-        </>
+        </Container>
     );
 };
 

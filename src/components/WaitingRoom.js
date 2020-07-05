@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 
 import { toastr } from 'react-redux-toastr';
 
-import { Row, Col, Button } from 'react-bootstrap';
+import { Row, Col, Button, Container } from 'react-bootstrap';
 import { FaTimes, FaSpinner } from 'react-icons/fa';
 
 import {
@@ -152,7 +152,7 @@ const WaitingRoom = ({
     }, [callRequest]);
 
     return (
-        <>
+        <Container style={{ marginTop: '20px' }}>
             <StoreHeader store={store} />  
             <Row className='text-center'>
                 <Col md={{ span: 6, offset: 3 }} xs={{ span: 12, offset: 0 }}>
@@ -173,7 +173,7 @@ const WaitingRoom = ({
                     </Button>
                 </Col>
             </Row>
-        </>
+        </Container>
     );
 };
 

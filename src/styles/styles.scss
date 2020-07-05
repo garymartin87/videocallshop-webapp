@@ -13,4 +13,16 @@ $theme-colors: (
     font-weight: 700;
 }
 
+.OTPublisherContainer {
+    position: absolute;
+    z-index: 10;
+}
+
+.OTSubscriberContainer {
+    position: absolute;
+    width: 100%;
+    height: calc(100vh - 161px);
+    overflow: hidden;
+}
+
 @import "bootstrap";

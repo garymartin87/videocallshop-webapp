@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Row, Col, Button, Card } from 'react-bootstrap';
+import { Row, Col, Button, Card, Container } from 'react-bootstrap';
 import { FaVideo } from 'react-icons/fa';
 
 import history from '../history';
@@ -61,23 +61,25 @@ const Home = ({ callRequest, fetchStores, stores }) => {
     };
 
     return (
-        <Row>
-            <Col md={{ span: 6, offset: 3 }} xs={{ span: 12, offset: 0 }}>
-                <h4>Seleccione una tienda a llamar</h4>
+        <Container style={{ marginTop: '20px' }}>
+            <Row>
+                <Col md={{ span: 6, offset: 3 }} xs={{ span: 12, offset: 0 }}>
+                    <h4>Seleccione una tienda a llamar</h4>
 
-                {stores.isFetching && (
-                    <>
-                        <p>Cargando tiendas</p>
-                    </>
-                )}
+                    {stores.isFetching && (
+                        <>
+                            <p>Cargando tiendas</p>
+                        </>
+                    )}
 
-                {!stores.isFetching && (
-                    <>
-                        {renderStores()}
-                    </>
-                )}
-            </Col>
-        </Row>
+                    {!stores.isFetching && (
+                        <>
+                            {renderStores()}
+                        </>
+                    )}
+                </Col>
+            </Row>
+        </Container>
     );
 };
 
