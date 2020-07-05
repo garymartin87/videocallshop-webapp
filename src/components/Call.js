@@ -2,24 +2,24 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { OTSession, OTPublisher, OTStreams, OTSubscriber } from 'opentok-react';
 
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, Navbar, Button } from 'react-bootstrap';
 
 import history from '../history';
 
 import {
     cancelCallRequestSuccess,
-    finishCallRequestSuccess
+    finishCallRequestSuccess,
+    finishCallRequest
 } from '../actions/callRequestActions';
 
 import { toastr } from 'react-redux-toastr';
-
-// import history from '../history';
 
 const Call = ({
     callRequest,
     call,
     cancelCallRequestSuccess,
-    finishCallRequestSuccess
+    finishCallRequestSuccess,
+    finishCallRequest
 }) => {
     // Check no call EFFECT
     useEffect(() => {
@@ -53,30 +53,44 @@ const Call = ({
         }
     }, [callRequest]);
 
+    const submitFinishCallRequest = () => {
+        const { storeId, callRequestId } = callRequest;
+        finishCallRequest(storeId, callRequestId);
+    };
+
     return (
-        <Row>
-            <Col lg={12} md={12} xs={12}>
-                <OTSession
-                    apiKey={call.tokboxApiKey}
-                    token={call.tokboxTokenCallRequest}
-                    sessionId={call.tokboxSessionId}
+        <>
+            <Row>
+                <Col lg={12} md={12} xs={12}>
+                    <OTSession
+                        apiKey={call.tokboxApiKey}
+                        token={call.tokboxTokenCallRequest}
+                        sessionId={call.tokboxSessionId}
+                    >
+                        <div id="publisher"><OTPublisher /></div>
+                        <OTStreams>
+                            <div id="subscriber">
+                                <OTSubscriber 
+                                    properties={{ 
+                                        insertMode: 'append',
+                                        fitMode: true, 
+                                        width: '100%', 
+                                        height: '100%' 
+                                    }}
+                                />
+                            </div>
+                        </OTStreams>
+                    </OTSession>
+                </Col>
+            </Row>
+            <Navbar fixed="bottom">
+                <Button
+                    onClick={submitFinishCallRequest}
                 >
-                    <div id="publisher"><OTPublisher /></div>
-                    <OTStreams>
-                        <div id="subscriber">
-                            <OTSubscriber 
-                                properties={{ 
-                                    insertMode: 'append',
-                                    fitMode: true, 
-                                    width: '100%', 
-                                    height: '100%' 
-                                }}
-                            />
-                        </div>
-                    </OTStreams>
-                </OTSession>
-            </Col>
-        </Row>
+                    Finalizar llamada
+                </Button>
+            </Navbar>
+        </>
     );
 };
 
@@ -92,5 +106,6 @@ export default connect(
     {
         cancelCallRequestSuccess,
         finishCallRequestSuccess,
+        finishCallRequest
     } //connect actions creators to the component
 )(Call);

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useForm } from 'react-hook-form';
-import { Row, Col, Container } from 'react-bootstrap';
+import { Row, Col, Container, Button } from 'react-bootstrap';
 
 import { createCallRequest } from '../actions/callRequestActions';
 import StoreHeader from './StoreHeader';
@@ -68,9 +68,9 @@ const CreateCallRequest = ({ createCallRequest, callRequest, fetchStores, store,
                             {errors.lastName && <span>This field is required</span>}
                         </div>
 
-                        <button type="submit" className="btn btn-primary">
+                        <Button type="submit" className="btn btn-primary">
                             Ingresar a sala de espera
-                        </button>
+                        </Button>
                     </form>
                 </Col>
             </Row>

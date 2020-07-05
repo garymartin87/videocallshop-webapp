@@ -14,7 +14,9 @@ import {
     CALL_REQUEST_CANCEL_REQUESTED,
     CALL_REQUEST_CANCEL_SUCCESS,
     CALL_REQUEST_CANCEL_FAILED,
+    CALL_REQUEST_FINISH_REQUESTED,
     CALL_REQUEST_FINISH_SUCCESS,
+    CALL_REQUEST_FINISH_FAILED,
     CALL_REQUEST_REFRESH_STATE_SUCCESS,
     CALL_REQUEST_POLLING_INTERVAL_CREATED,
     CALL_REQUEST_POLLING_INTERVAL_REMOVED
@@ -167,6 +169,37 @@ export const cancelCallRequestSuccess = () => async (dispatch, getState) => {
 };
 
 // Finish
+export const finishCallRequest = (storeId, callRequestId) => async (
+    dispatch,
+    getState
+) => {
+    dispatch({
+        type: CALL_REQUEST_FINISH_REQUESTED,
+    });
+
+    try {
+        const { callRequest } = getState().callRequest;
+
+        let { data } = await videocallshopApi.patch(
+            `/stores/${storeId}/call-requests/${callRequestId}`,
+            {
+                status: 'FINISHED'
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${callRequest.token}`,
+                },
+            }
+        );
+        dispatch(finishCallRequestSuccess(data.data));
+    } catch (err) {
+        dispatch({
+            type: CALL_REQUEST_FINISH_FAILED,
+        });
+        toastr.error('Error', 'ocurrió un error 4');
+    }
+};
+
 export const finishCallRequestSuccess = (storeId, callRequestId) => async (
     dispatch,
     getState
@@ -183,6 +216,7 @@ export const finishCallRequestSuccess = (storeId, callRequestId) => async (
     history.push('/home');
 };
 
+// Utils
 const removeCallRequest = () => async (
     dispatch,
     getState

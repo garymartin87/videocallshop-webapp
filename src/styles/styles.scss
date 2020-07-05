@@ -21,7 +21,7 @@ $theme-colors: (
 .OTSubscriberContainer {
     position: absolute;
     width: 100%;
-    height: 100vh;
+    height: calc(100vh - 56px*2);
     overflow: hidden;
 }
 
