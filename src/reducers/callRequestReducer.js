@@ -5,9 +5,9 @@ import {
     CALL_REQUEST_CANCEL_REQUESTED,
     CALL_REQUEST_CANCEL_SUCCESS,
     CALL_REQUEST_CANCEL_FAILED,
-    CALL_REQUEST_REFRESH_STATE_REQUESTED,
-    CALL_REQUEST_REFRESH_STATE_SUCCESS,
-    CALL_REQUEST_REFRESH_STATE_FAILED,
+    CALL_REQUEST_REFRESH_REQUESTED,
+    CALL_REQUEST_REFRESH_SUCCESS,
+    CALL_REQUEST_REFRESH_FAILED,
     CALL_REQUEST_FINISH_SUCCESS,
     CALL_REQUEST_POLLING_INTERVAL_CREATED,
     CALL_REQUEST_POLLING_INTERVAL_REMOVED
@@ -25,7 +25,7 @@ export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
         // Creation
         case CALL_REQUEST_CREATION_REQUESTED:
-        case CALL_REQUEST_REFRESH_STATE_REQUESTED:
+        case CALL_REQUEST_REFRESH_REQUESTED:
             return {
                 ...state,
                 isFetching: true,
@@ -36,17 +36,17 @@ export default (state = INITIAL_STATE, action) => {
                 callRequest: action.payload,
                 isFetching: false,
             };
-        case CALL_REQUEST_REFRESH_STATE_SUCCESS:
+        case CALL_REQUEST_REFRESH_SUCCESS:
             return {
                 ...state,
                 callRequest: {
-                    ...state.callRequest,
-                    state: action.payload
+                    ...state.callRequest, // Keep the token
+                    ...action.payload
                 },
                 isFetching: false
             };
         case CALL_REQUEST_CREATION_FAILED:
-        case CALL_REQUEST_REFRESH_STATE_FAILED:
+        case CALL_REQUEST_REFRESH_FAILED:
             return {
                 ...state,
                 isFetching: false,

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { OTSession, OTPublisher, OTStreams, OTSubscriber } from 'opentok-react';
 
-import { Row, Col, Navbar, Button } from 'react-bootstrap';
+import { Row, Col, Navbar, Button, Badge, Modal } from 'react-bootstrap';
 
 import history from '../history';
 
@@ -21,6 +21,8 @@ const Call = ({
     finishCallRequestSuccess,
     finishCallRequest
 }) => {
+    const [showPurchaseOrdersModal, setShowPurchaseOrdersModal] = useState(false);
+
     // Check no call EFFECT
     useEffect(() => {
         if (!call) {
@@ -86,10 +88,39 @@ const Call = ({
             <Navbar fixed="bottom">
                 <Button
                     onClick={submitFinishCallRequest}
+                    style={{ marginRight: '15px' }}
                 >
                     Finalizar llamada
                 </Button>
+                <Button
+                    onClick={() => setShowPurchaseOrdersModal(true)}
+                    variant="info"
+                >
+                    Ver ordenes de compra 
+                    { callRequest.purchaseOrders &&
+                      callRequest.purchaseOrders.length > 0 && 
+                        <Badge 
+                            variant="primary"
+                            style={{ marginLeft: '5px' }}
+                        >{ callRequest.purchaseOrders.length }</Badge> 
+                    }
+                </Button>
             </Navbar>
+
+            {/* PURCHASE ORDERS MODAL */}
+            <Modal show={showPurchaseOrdersModal} onHide={() => setShowPurchaseOrdersModal(false)}>
+                <Modal.Header closeButton>
+                <Modal.Title>Ordenes de compra</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div><pre>{JSON.stringify(callRequest.purchaseOrders, null, 2) }</pre></div>;
+                </Modal.Body>
+                <Modal.Footer>
+                <Button variant="secondary" onClick={() => setShowPurchaseOrdersModal(false)}>
+                    Close
+                </Button>
+                </Modal.Footer>
+            </Modal>
         </>
     );
 };

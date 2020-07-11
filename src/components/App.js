@@ -27,7 +27,7 @@ function App({ callRequest, storePollingInterval }) {
 
     return (
         <>
-            <Navbar bg="light" sticky="top">
+            <Navbar bg="primary" sticky="top">
                 <Navbar.Brand>VIDEO CALL SHOP</Navbar.Brand>
             </Navbar>
         
