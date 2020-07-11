@@ -9,15 +9,15 @@ import {
     CALL_REQUEST_CREATION_REQUESTED,
     CALL_REQUEST_CREATION_SUCCESS,
     CALL_REQUEST_CREATION_FAILED,
-    CALL_REQUEST_REFRESH_STATE_REQUESTED,
-    CALL_REQUEST_REFRESH_STATE_FAILED,
+    CALL_REQUEST_REFRESH_REQUESTED,
+    CALL_REQUEST_REFRESH_FAILED,
     CALL_REQUEST_CANCEL_REQUESTED,
     CALL_REQUEST_CANCEL_SUCCESS,
     CALL_REQUEST_CANCEL_FAILED,
     CALL_REQUEST_FINISH_REQUESTED,
     CALL_REQUEST_FINISH_SUCCESS,
     CALL_REQUEST_FINISH_FAILED,
-    CALL_REQUEST_REFRESH_STATE_SUCCESS,
+    CALL_REQUEST_REFRESH_SUCCESS,
     CALL_REQUEST_POLLING_INTERVAL_CREATED,
     CALL_REQUEST_POLLING_INTERVAL_REMOVED
 } from './types';
@@ -71,14 +71,14 @@ export const createCallRequestSuccess = (callRequest) => async (
 };
 
 // Refresh
-export const refreshCallRequestState = () => async (dispatch, getState) => {
+export const refreshCallRequest = () => async (dispatch, getState) => {
     const { callRequest } = getState().callRequest;
     if (!callRequest) {
         return;
     }
 
     dispatch({
-        type: CALL_REQUEST_REFRESH_STATE_REQUESTED,
+        type: CALL_REQUEST_REFRESH_REQUESTED,
     });
 
     try {
@@ -90,39 +90,33 @@ export const refreshCallRequestState = () => async (dispatch, getState) => {
                 },
             }
         );
-        dispatch(refreshCallRequestStateSuccess(data.data.state));
+        dispatch(refreshCallRequestSuccess(data.data));
     } catch (err) {
         dispatch({
-            type: CALL_REQUEST_REFRESH_STATE_FAILED,
+            type: CALL_REQUEST_REFRESH_FAILED,
         });
         toastr.error('Error', 'ocurrió un error 3');
     }
 };
 
-export const refreshCallRequestStateSuccess = (state) => async (
+export const refreshCallRequestSuccess = (newCallRequest) => async (
     dispatch,
     getState
 ) => {
     const { callRequest } = getState().callRequest;
 
     try {
-        const localStorageCallRequest = JSON.parse(
-            localStorage.getItem('CALL_REQUEST')
-        );
-        localStorageCallRequest.state = state;
         localStorage.setItem(
             'CALL_REQUEST',
-            JSON.stringify(localStorageCallRequest)
+            JSON.stringify({ ...callRequest, ...newCallRequest }) // Keep the token
         );
     } catch (err) {
         console.log(err);
-        console.log('callRequest.state', callRequest.state);
-        console.log('new state', state);
     }
 
     dispatch({
-        type: CALL_REQUEST_REFRESH_STATE_SUCCESS,
-        payload: state,
+        type: CALL_REQUEST_REFRESH_SUCCESS,
+        payload: newCallRequest,
     });
 };
 
@@ -152,6 +146,9 @@ export const cancelCallRequest = (storeId, callRequestId) => async (
             type: CALL_REQUEST_CANCEL_FAILED,
         });
         toastr.error('Error', 'ocurrió un error 4');
+
+        // Anyway cancel call request
+        dispatch(cancelCallRequestSuccess());
     }
 };
 
@@ -197,6 +194,9 @@ export const finishCallRequest = (storeId, callRequestId) => async (
             type: CALL_REQUEST_FINISH_FAILED,
         });
         toastr.error('Error', 'ocurrió un error 4');
+
+        // Anyway finish call request
+        dispatch(finishCallRequestSuccess()); // 
     }
 };
 
@@ -242,7 +242,7 @@ export const storePollingInterval = (intervalId) => async (
         const { callRequest } = getState();
         console.log('::: INTERVAL FIRED isAlreadyFetching', callRequest.isFetching);
         if(!callRequest.isFetching) {
-            dispatch(refreshCallRequestState()) 
+            dispatch(refreshCallRequest()) 
         }
     }, 5000);
 
