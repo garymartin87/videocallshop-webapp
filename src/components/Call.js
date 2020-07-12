@@ -12,6 +12,8 @@ import {
     finishCallRequest
 } from '../actions/callRequestActions';
 
+import PurchaseOrder from './PurchaseOrder';
+
 import { toastr } from 'react-redux-toastr';
 
 const Call = ({
@@ -58,6 +60,23 @@ const Call = ({
     const submitFinishCallRequest = () => {
         const { storeId, callRequestId } = callRequest;
         finishCallRequest(storeId, callRequestId);
+    };
+
+    const renderPurchaseOrders = purchaseOrders => {
+        return (
+            <Row>
+                {
+                    purchaseOrders.map((purchaseOrder, index) => {
+                        return (
+                            <PurchaseOrder
+                                key={purchaseOrder.purchaseOrderId}
+                                purchaseOrder={purchaseOrder}
+                            />
+                        );
+                    })
+                }
+            </Row>
+        );
     };
 
     return (
@@ -108,12 +127,16 @@ const Call = ({
             </Navbar>
 
             {/* PURCHASE ORDERS MODAL */}
-            <Modal show={showPurchaseOrdersModal} onHide={() => setShowPurchaseOrdersModal(false)}>
+            <Modal
+                size="lg"
+                show={showPurchaseOrdersModal}
+                onHide={() => setShowPurchaseOrdersModal(false)}
+            >
                 <Modal.Header closeButton>
                 <Modal.Title>Ordenes de compra</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <div><pre>{JSON.stringify(callRequest.purchaseOrders, null, 2) }</pre></div>;
+                    { renderPurchaseOrders(callRequest.purchaseOrders) }
                 </Modal.Body>
                 <Modal.Footer>
                 <Button variant="secondary" onClick={() => setShowPurchaseOrdersModal(false)}>
