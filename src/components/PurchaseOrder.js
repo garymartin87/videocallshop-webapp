@@ -40,7 +40,7 @@ const PurchaseOrder = ({ purchaseOrder }) => {
                 <ul>
                     {renderItems(purchaseOrder.items)}
                 </ul>
-                <p style={{ marginBottom: '0px' }}><strong>TOTAL: ${getTotal(purchaseOrder.items)} ${purchaseOrder.shippingPrice ? ` + ${purchaseOrder.shippingPrice} (envío) = $${getTotal(purchaseOrder.items) + purchaseOrder.shippingPrice}` : ''}</strong></p>
+                <p style={{ marginBottom: '0px' }}><strong>TOTAL: ${getTotal(purchaseOrder.items)} {purchaseOrder.shippingPrice ? ` + $${purchaseOrder.shippingPrice} (envío) = $${getTotal(purchaseOrder.items) + purchaseOrder.shippingPrice}` : ''}</strong></p>
             </Alert>
         </Col>
     );
