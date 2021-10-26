@@ -27,9 +27,9 @@ function App({ callRequest, storePollingInterval }) {
 
     return (
         <>
-            <Navbar bg="primary" sticky="top">
+        {/* <Navbar bg="primary" sticky="top">
                 <Navbar.Brand>VIDEO CALL SHOP</Navbar.Brand>
-            </Navbar>
+            </Navbar> */}
         
             <Router history={history}>
                 <Switch>
